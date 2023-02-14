@@ -142,30 +142,24 @@ components:
     FormData:
       type: object
       properties:
-        id: 
+        form_id: 
           type: integer
           description: | 
             The ID of the form in the ACCloud supply system. 
             This will change if a new form version is published. 
           example: 1
-        name:
+        form_name:
           type: string
           description: |
             The name of the form in the ACCloud supply system. 
           example: CSI New Referral Request
-        schema_id: 
+        form_schema_id: 
           type: string
           format: uuid
           description: |
             The ID of the form in the ACCloud supply system. 
             This will not change if a new form version is published.
           example: 7ca2b01e-d521-4a7b-be1d-14718a15b81b
-        schema_version:
-          type: integer
-          description: |
-            The version of the form in the ACCloud supply system. 
-            This will be incremented if a new form version is published.
-          example: 1
         created_at:
           type: string
           format: date-time
