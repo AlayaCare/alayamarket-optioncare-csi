@@ -1,0 +1,226 @@
+openapi: 3.0.3
+info:
+  title: |
+    OptionCare CSI integration specifications - OpenAPI 3.0
+  description: |-
+    This document contains technical specifications for the integration 
+    between Supply Agencies using AlayaCare and OptionCare CSI using CPR+. 
+  version: 0.0.1
+servers:
+  # TODO: confirm test servers
+  - url: https://optioncarecsi.testing.com
+  - url: https://optioncarecsi.com
+paths:
+  # TODO: confirm path
+  /agency_request:
+    post:
+      tags:
+        - Agency Request
+      description: Receive a new authorization request from the supply agency. 
+      operationId: new_auth_request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              # TODO: confirm schema format
+              $ref: '#/components/schemas/AgencyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid data
+      # TODO: confirm security
+      # security: ...
+
+components:
+  schemas:
+    BaseRequest: 
+      type: object
+      properties:
+        agency:
+          $ref: '#/components/schemas/AgencyMetadata'
+        client:
+          $ref: '#/components/schemas/ClientMetadata'
+      required:
+        - agency
+        - client
+
+    AgencyRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            form_data: 
+              $ref: '#/components/schemas/FormData'
+          required:
+            - form_data
+      
+    ClientMetadata: 
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 1
+          description: Primary key for the client in the ACCloud supply system. 
+        first_name: 
+          type: string
+          example: Jane
+          description: First name of the client in the ACCloud supply system. 
+        last_name: 
+          type: string
+          example: Smith
+          description: Last name of the client in the ACCloud supply system. 
+        email: 
+          type: string
+          example: user@email.com
+          description: Email of the client in the ACCloud supply system. 
+        phone_main: 
+          type: string
+          example: 514-555-5555
+          description: Phone number of the client in the ACCloud supply system. 
+        birthday: 
+          type: string
+          format: date
+          example: 2000-01-31
+          description: Birthday of the client in the ACCloud supply system. 
+        gender: 
+          type: string
+          example: female
+          description: Gender of the client in the ACCloud supply system. 
+        address: 
+          type: string
+          example: 4200 boul Saint Laurent suite 800
+          description: Address of the client in the ACCloud supply system. 
+        city:
+          type: string
+          example: Montreal
+          description: City of the client in the ACCloud supply system. 
+        state:
+          type: string
+          example: Quebec 
+          description: City of the client in the ACCloud supply system. 
+        zip:
+          type: string
+          example: H2W 2R2
+          description: Zip code of the client in the ACCloud supply system. 
+        country:
+          type: string
+          example: Canada
+          description: Country of the client in the ACCloud supply system. 
+      required:
+        - id
+        - first_name
+        - last_name
+
+    AgencyMetadata: 
+      type: object
+      properties:
+        name: 
+          type: integer
+          example: 1
+          description: Name of the agency. 
+        host: 
+          type: string
+          example: https://optioncaresupply.alayacare.com
+          description: Domain name of the ACCloud supply system. 
+        branch_id: 
+          type: integer
+          example: 1005
+          description: ID of the ACCloud supply branch used by the agency. 
+        alayamarket_org_id: 
+          type: string
+          format: uuid
+          example: a0ae850c-8c39-47fa-9f62-9a31cc15cc3f
+          description: ID of the agency in AlayaMarket linked to the ACCloud supply branch. 
+      required:
+        - name
+        - host
+        - branch_id
+        - alayamarket_org_id
+
+    FormData:
+      type: object
+      properties:
+        id: 
+          type: integer
+          description: | 
+            The ID of the form in the ACCloud supply system. 
+            This will change if a new form version is published. 
+          example: 1
+        name:
+          type: string
+          description: |
+            The name of the form in the ACCloud supply system. 
+          example: CSI New Referral Request
+        schema_id: 
+          type: string
+          format: uuid
+          description: |
+            The ID of the form in the ACCloud supply system. 
+            This will not change if a new form version is published.
+          example: 7ca2b01e-d521-4a7b-be1d-14718a15b81b
+        schema_version:
+          type: integer
+          description: |
+            The version of the form in the ACCloud supply system. 
+            This will be incremented if a new form version is published.
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          description: The date that the form was submitted by ACCloud supply coordinator. 
+          example: '2023-01-24T16:03:52+00:00'
+        created_by: 
+          type: string
+          description: The name of the ACCloud supply coordinator that submitted the form. 
+          example: Harry Monroe
+        fields: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/FormFieldData'
+
+    FormFieldData:
+      type: object
+      properties:
+        field_id: 
+          type: integer
+          description: | 
+            The ID of the form field in the ACCloud supply system. 
+            This will change if a new form version is published. 
+          example: 123
+        # field_tag: 
+        #   type: string
+        #   description: | 
+        #     The tag of the form field in the ACCloud supply system. 
+        #     This will not change if a new form version is published. 
+        #     We recommend using this to identify fields. 
+        #   example: field_patient_first_name
+        field_label: 
+          type: string
+          description: The name of the form field in the ACCloud supply system. 
+          example: First Name
+        field_type:
+          type: string
+          description: The type of form field in the ACCloud supply system. 
+          example: demographics
+          enum: 
+            - section
+            - text 
+            - textarea
+            - number
+            - list
+            - picture
+            - demographics 
+            - medical_history
+        field_value:
+          type: string
+          description: | 
+            The value entered by the user when filling the form field 
+            in the ACCloud supply system. 
+          example: Jane
+      required:
+        - field_id
+        # - field_tag
+        - field_label
+        - field_type
