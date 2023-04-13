@@ -51,7 +51,7 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
 
 * **API reference:** [service-api-external](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Services/post_services) 
 
-* **URL:** `$ACC_BASE_URL/ext/api/v2/scheduler/services`
+* **URL:** `$ACCLOUD_URL/ext/api/v2/scheduler/services`
 
 * **Example payload:**
 ```json
