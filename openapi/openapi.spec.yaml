@@ -7,12 +7,12 @@ info:
     between Supply Agencies using AlayaCare and OptionCare CSI using CPR+. 
   version: 0.0.1
 servers:
-  # TODO: confirm test servers
+  # TODO: confirm test servers once CSI provides an endpoint
   - url: https://optioncarecsi.testing.com
   - url: https://optioncarecsi.com
 paths:
-  # TODO: confirm path
-  /agency_request:
+  # TODO: confirm path once CSI provides an endpoint
+  /referral_request:
     post:
       tags:
         - Agency Request
@@ -23,7 +23,7 @@ paths:
           application/json:
             schema:
               # TODO: confirm schema format
-              $ref: '#/components/schemas/AgencyRequest'
+              $ref: '#/components/schemas/ReferralRequest'
         required: true
       responses:
         '200':
@@ -46,11 +46,15 @@ components:
         - agency
         - client
 
-    AgencyRequest:
+    ReferralRequest:
       allOf:
         - $ref: '#/components/schemas/BaseRequest'
         - type: object
           properties:
+            files:
+              type: array
+              items:
+                $ref: '#/components/schemas/FormFile'
             form_data: 
               $ref: '#/components/schemas/FormData'
           required:
@@ -139,6 +143,18 @@ components:
         - branch_id
         - alayamarket_org_id
 
+    FormFile: 
+      type: object
+      properties:
+        file_name:
+          type: string
+          description: The name of the file submitted by the ACCloud supply coordinator.  
+          example: physician_order_form.pdf
+        file_value:
+          type: string
+          description: The base64-encoded value of the file submitted by the ACCloud supply coordinator.  
+          example: iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=
+        
     FormData:
       type: object
       properties:
