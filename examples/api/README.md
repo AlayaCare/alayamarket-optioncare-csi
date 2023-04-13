@@ -6,15 +6,16 @@ There are several ways that CPR+ can send the Referral Approval to the supply ag
 
 In this option, CSI will sync clients, services, and authorizations from CPR+ to ACCloud CSI (HQ branch), before sending a Referral Approval from ACCloud via Marketplace to the supply agency. 
 
-> Host: `ACCLOUD_URL = https://csi.uat.alayacare.com`  
-
-> Authentication: Basic authentication using API keys 
+* **Host:** `ACCLOUD_URL = https://csi.uat.alayacare.com`  
+* **Authentication:** Basic authentication using API keys 
 
 ### Step 1: Create the Client
 
-> API reference: [client-api-external](https://app.swaggerhub.com/apis/AlayaCare/client-api-external/1.0.6#/Clients/post_clients) 
+* **API reference:** [client-api-external](https://app.swaggerhub.com/apis/AlayaCare/client-api-external/1.0.6#/Clients/post_clients) 
 
-> URL: `POST $ACCLOUD_URL/ext/api/v2/patients/clients`
+* **URL:** `POST $ACCLOUD_URL/ext/api/v2/patients/clients`
+
+* **Example payload:**
 ```json
 {
    "demographics":{
@@ -42,15 +43,17 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
 }
 ```
 
-Notes:
-* Groups can be fetched from `$ACCLOUD_URL/ext/api/v2/patients/groups`
+* **Notes:**
+  * Groups can be fetched from `$ACCLOUD_URL/ext/api/v2/patients/groups`
 
 
 ### Step 2: Create the Service
 
-> API reference: [service-api-external](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Services/post_services) 
+* **API reference:** [service-api-external](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Services/post_services) 
 
-> URL: `$ACC_BASE_URL/ext/api/v2/scheduler/services`
+* **URL:** `$ACC_BASE_URL/ext/api/v2/scheduler/services`
+
+* **Example payload:**
 ```json
 {
    "service_id":"service_external_id_1",
@@ -75,18 +78,20 @@ Notes:
 }
 ```
 
-Notes:
-* Service codes can be fetched from `$ACCLOUD_URL/ext/api/v2/scheduler/service_codes`
-* Skills can be fetched from `$ACCLOUD_URL/ext/api/v2/employees/skills`
-* Payors/Funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`
-* Client can be referenced using one of `client_id` OR `alayacare_client_id`
-  * The `client_id` is returned when a client is created
+* **Notes:**
+  * Service codes can be fetched from `$ACCLOUD_URL/ext/api/v2/scheduler/service_codes`
+  * Skills can be fetched from `$ACCLOUD_URL/ext/api/v2/employees/skills`
+  * Payors/Funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`
+  * Client can be referenced using one of `client_id` OR `alayacare_client_id`
+    * The `client_id` is returned when a client is created
 
 ### Step 3: Create the Authorization
 
-> API reference: External API specifications are not yet available for this endpoint 
+* **API reference:** External API specifications are not yet available for this endpoint 
 
-> URL: `$ACCLOUD_URL/api/v1/scheduler/authorizations`
+* **URL:** `$ACCLOUD_URL/api/v1/scheduler/authorizations`
+
+* **Example payload:**
 ```json
 {
    "client_id":1060,
@@ -123,16 +128,18 @@ Notes:
 }
 ```
 
-Notes:
-* Payors/Funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`
-* The `client_id` and `service_id` are returned when creating a client and service, respectively
+* **Notes:**
+  * Payors/Funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`
+  * The `client_id` and `service_id` are returned when creating a client and service, respectively
 
 
 ### Step 4: Send the Referral Approval
 
-> API reference: External API specifications are not yet available for this endpoint 
+* **API reference:** External API specifications are not yet available for this endpoint 
 
-> URL: `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}`
+* **URL:** `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}`
+
+* **Example payload:**
 ```json
 {
    "referral_type":"service",
@@ -144,25 +151,28 @@ Notes:
 }
 ```
 
-Notes:
-* The `supply_persona_id` will be provided in the referral request payload under `alayamarket_org_id`
-* Authorizations can be fetched from `$ACCLOUD_URL/api/v1/scheduler/authorizations`
-  * The `service_id` and `authorization_id` are returned when creating a service and authorization, respectively
+* **Notes:**
+  * The `supply_persona_id` will be provided in the referral request payload under `alayamarket_org_id`
+  * Authorizations can be fetched from `$ACCLOUD_URL/api/v1/scheduler/authorizations`
+    * The `service_id` and `authorization_id` are returned when creating a service and authorization, respectively
 
 
 ## Option 2: CPR+ → Marketplace -> Supply Agency
 
 In this option, CSI will send the Referral Approval from CPR+ via Marketplace to the supply agency. 
 
-> Host: `MARKETPLACE_URL = https://api.sandbox.alayamarket.com`  
+* **Host:** `MARKETPLACE_URL = https://api.sandbox.alayamarket.com`  
 
-> Authentication: Bearer (token) authentication, for details see the [Marketplace user guide](https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/)
+* **Authentication:** Bearer (token) authentication 
+  * For more details see the [Marketplace user guide](https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/)
 
 ### Step 1: Send the Referral Approval
 
-> API reference: [referral-outbox-api](https://alayacare.github.io/alayamarket-external-docs/docs/offers/openapi.offers#/referral%20outbox/post_v1_outbox_referrals)
+* **API reference:** [referral-outbox-api](https://alayacare.github.io/alayamarket-external-docs/docs/offers/openapi.offers#/referral%20outbox/post_v1_outbox_referrals)
 
-> URL: `$MARKETPLACE_URL/offers/v1/outbox/referrals`
+* **URL:** `$MARKETPLACE_URL/offers/v1/outbox/referrals`
+
+* **Example payload:**
 ```json
 {
    "referral":{
@@ -236,7 +246,7 @@ In this option, CSI will send the Referral Approval from CPR+ via Marketplace to
 }
 ```
 
-Notes:
-* The `supply_persona_id` will be provided in the referral request payload under `alayamarket_org_id`
-* The `outbox_id` should reference the entity ID in the originating system
-* The authorizations are expected to match the ACCloud format for authorizations and can be fetched from `$ACCLOUD_URL/api/v1/scheduler/authorizations/{authorization_id}`
+* **Notes:**
+  * The `supply_persona_id` will be provided in the referral request payload under `alayamarket_org_id`
+  * The `outbox_id` should reference the entity ID in the originating system
+  * The authorizations are expected to match the ACCloud format for authorizations and can be fetched from `$ACCLOUD_URL/api/v1/scheduler/authorizations/{authorization_id}`
