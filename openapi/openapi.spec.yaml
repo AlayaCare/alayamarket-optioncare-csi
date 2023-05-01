@@ -38,6 +38,10 @@ components:
     BaseRequest: 
       type: object
       properties:
+        request_id: 
+          type: string
+          format: uuid
+          example: 9b072ac4-0e84-4b0a-b75b-977579af07fe
         agency:
           $ref: '#/components/schemas/AgencyMetadata'
         client:
