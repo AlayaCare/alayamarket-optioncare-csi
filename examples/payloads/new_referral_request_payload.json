@@ -1,32 +1,32 @@
 {
-   "request_id": "9b072ac4-0e84-4b0a-b75b-977579af07fe", 
-    "agency":{
-       "host":"https://csi.uat.alayacare.com",
-       "name":"Gem City Home Care",
-       "branch_id":1050,
-       "alayamarket_org_id":"76c7aa8c-1864-4bc7-91b1-9ade89ee8c5e"
-    },
-    "client":{
-       "id":1053,
-       "zip":"134465",
-       "city":"chicago",
-       "email":"1234@ajlk.ccc",
-       "state":"CA",
-       "gender":"F",
-       "address":"123 address st",
-       "country":"US",
-       "birthday":"2021-01-11",
-       "last_name":"Wright",
-       "first_name":"Annabelle",
-       "phone_main":"12346546546987"
-    },
-    "files":[
-       {
-          "file_name":"physician_order_form.pdf",
-          "file_value":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
-       }
-    ],
-"form_data":{
+   "request_id":"9b072ac4-0e84-4b0a-b75b-977579af07fe",
+   "agency":{
+      "host":"https://csi.uat.alayacare.com",
+      "name":"Gem City Home Care",
+      "branch_id":1050,
+      "alayamarket_org_id":"76c7aa8c-1864-4bc7-91b1-9ade89ee8c5e"
+   },
+   "client":{
+      "id":1053,
+      "zip":"134465",
+      "city":"chicago",
+      "email":"1234@ajlk.ccc",
+      "state":"CA",
+      "gender":"F",
+      "address":"123 address st",
+      "country":"US",
+      "birthday":"2021-01-11",
+      "last_name":"Wright",
+      "first_name":"Annabelle",
+      "phone_main":"12346546546987"
+   },
+   "files":[
+      {
+         "file_name":"physician_order_form.pdf",
+         "file_value":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+      }
+   ],
+   "form_data":{
       "form_id":13,
       "form_name":"CSI New Referral Request",
       "form_schema_id":"89a3b8ba-0009-464b-a2a0-06c49cbcd745",
@@ -237,5 +237,4 @@
          }
       ]
    }
- }
- 
+}
