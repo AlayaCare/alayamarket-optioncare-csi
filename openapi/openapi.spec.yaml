@@ -46,6 +46,8 @@ components:
           $ref: '#/components/schemas/AgencyMetadata'
         client:
           $ref: '#/components/schemas/ClientMetadata'
+        service:
+          $ref: '#/components/schemas/ServiceMetadata'
       required:
         - agency
         - client
@@ -66,11 +68,18 @@ components:
       
     ClientMetadata: 
       type: object
+      description: Client metadata in the ACCloud supply system. 
       properties:
         id: 
           type: integer
           example: 1
           description: Primary key for the client in the ACCloud supply system. 
+        # external_id:
+        #   type: string
+        #   example: 77667576-dea5-4ace-8523-4f5dbc1e62e8
+        #   description: | 
+        #     External ID of the client in the ACCloud supply system. 
+        #     This will be the ID of the client in Marletplace.
         first_name: 
           type: string
           example: Jane
@@ -121,6 +130,30 @@ components:
         - first_name
         - last_name
 
+    ServiceMetadata: 
+      type: object
+      description: |
+        Service metadata in the ACCloud supply system. 
+        This will only be available for requests to update an existing service. 
+      properties:
+        id: 
+          type: integer
+          example: 1
+          description: Primary key for the service in the ACCloud supply system. 
+        name: 
+          type: string
+          example: Personal Care
+          description: Name of the service in the ACCloud supply system. 
+        # external_id:
+        #   type: string
+        #   example: a9b848fb-19f3-4ea8-bcf3-8092d939a935
+        #   description: | 
+        #     External ID of the service in the ACCloud supply system. 
+        #     This will be the ID of the service in Marletplace.
+      required:
+        - id 
+        - name
+
     AgencyMetadata: 
       type: object
       properties:
@@ -140,7 +173,7 @@ components:
           type: string
           format: uuid
           example: a0ae850c-8c39-47fa-9f62-9a31cc15cc3f
-          description: ID of the agency in AlayaMarket linked to the ACCloud supply branch. 
+          description: ID of the agency in Marketplace linked to the ACCloud supply branch. 
       required:
         - name
         - host
