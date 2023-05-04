@@ -229,8 +229,8 @@
             "field_type":"list",
             "field_value":{
                "option":{
-                  "name":"Eastern Time (EST/EDT)",
-                  "value":"Eastern Time (EST/EDT)"
+                  "name":"America/Chicago",
+                  "value":"America/Chicago"
                }
             },
             "task_field":false
