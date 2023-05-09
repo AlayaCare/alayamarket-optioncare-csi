@@ -116,10 +116,15 @@ components:
           type: string
           example: Canada
           description: Country of the client in the ACCloud supply system. 
+        timezone: 
+          type: string
+          example: America/Chicago
+          description: Timezone of the client in the ACCloud supply system. 
       required:
         - id
         - first_name
         - last_name
+        - timezone
 
     AgencyMetadata: 
       type: object
@@ -141,11 +146,16 @@ components:
           format: uuid
           example: a0ae850c-8c39-47fa-9f62-9a31cc15cc3f
           description: ID of the agency in AlayaMarket linked to the ACCloud supply branch. 
+        timezone: 
+          type: string
+          example: America/Chicago
+          description: Timezone of the agency. 
       required:
         - name
         - host
         - branch_id
         - alayamarket_org_id
+        - timezone
 
     FormFile: 
       type: object

@@ -4,7 +4,8 @@
       "host":"https://csi.uat.alayacare.com",
       "name":"Gem City Home Care",
       "branch_id":1050,
-      "alayamarket_org_id":"76c7aa8c-1864-4bc7-91b1-9ade89ee8c5e"
+      "alayamarket_org_id":"76c7aa8c-1864-4bc7-91b1-9ade89ee8c5e", 
+      "timezone": "America/Chicago"
    },
    "client":{
       "id":1053,
@@ -18,7 +19,8 @@
       "birthday":"2021-01-11",
       "last_name":"Wright",
       "first_name":"Annabelle",
-      "phone_main":"12346546546987"
+      "phone_main":"12346546546987", 
+      "timezone": "America/Chicago"
    },
    "files":[
       {
@@ -222,18 +224,6 @@
                }
             },
             "type":"list"
-         },
-         {
-            "field_id":308,
-            "field_label":"Time zone",
-            "field_type":"list",
-            "field_value":{
-               "option":{
-                  "name":"Eastern Time (EST/EDT)",
-                  "value":"Eastern Time (EST/EDT)"
-               }
-            },
-            "task_field":false
          }
       ]
    }
