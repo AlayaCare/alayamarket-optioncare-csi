@@ -1,0 +1,1090 @@
+openapi: "3.0.1"
+info:
+  title:
+    ACCloud Service AlayaMarket
+  version: "1.0"
+  contact:
+    name: Team AlayaMarket
+    email: team-alayamarket@alayacare.com
+# NOTE: servers causes issues with connexion
+# servers:
+  # - url: https://tenant.alayacare.ca/api/v1/alayamarket
+  #   description: Production server in Canada
+  # - url: https://tenant.staging.alayacare.ca/api/v1/alayamarket
+    # description: Staging server in Canada
+
+paths:
+
+  /outbox/referrals/from_service/{service_id}:
+    parameters:
+    - in: path
+      name: service_id
+      schema:
+        type: integer
+      required: true
+      description: ID of a service
+    post:
+      operationId: alaya.api.alayamarket.outbox.entrypoints.create_referral_for_service
+      tags:
+        - Outbox - Referrals
+      description: |
+        # Authorization
+        Required ACL: `SCHEDULE_MARKETPLACE_OFFERS_MANAGE = 'schedule/marketplace/offers/manage'`
+
+        # Description
+        Create a Referral for a service.
+        This will first aggregate the required data for the Referral.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReferralOutboxCreateFromServiceRequest'
+      responses:
+        201:
+          description: "Successfully created Offer"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferralOutboxDetailResponse'
+
+security:
+  # all endpoints are authenticated using tokens by default
+  - tokenAuth: []
+
+components:
+  parameters: 
+
+    # Section: Outbox 
+    IsAcceptedParam:
+      in: query
+      name: is_accepted
+      schema:
+        $ref: '#/components/schemas/IsAcceptedSchema'
+    ClientId:
+      in: query
+      name: client_id
+      schema:
+        $ref: '#/components/schemas/ClientIdSchema'
+    VisitId:
+      in: query
+      name: visit_id
+      schema:
+        $ref: '#/components/schemas/VisitIdSchema'
+    ItemsPerPageParam:
+      in: query
+      name: items_per_page
+      schema:
+        $ref: '#/components/schemas/ItemsPerPageResponse'
+    PageNumberParam:
+      in: query
+      name: page
+      schema:
+        $ref: '#/components/schemas/PageNumberResponse'
+    SortByParam:
+      in: query
+      name: sort_by
+      schema:
+        $ref: '#/components/schemas/SortBySchema'
+    SortOrderParam:
+      in: query
+      name: sort_order
+      schema:
+        $ref: '#/components/schemas/SortOrderSchema'
+    OfferStatus:
+      in: query
+      name: status
+      schema:
+        $ref: '#/components/schemas/OfferStatusSchema'
+    OfferType:
+      in: query
+      name: offer_type
+      schema:
+        $ref: '#/components/schemas/OfferTypeCore'
+    ReferralType:
+      in: query
+      name: referral_type
+      schema:
+        $ref: '#/components/schemas/ReferralTypeCore'
+    CareType:
+      in: query
+      name: care_type
+      schema:
+        $ref: '#/components/schemas/CareTypeCore'
+    ExpiresAfter:
+      in: query
+      name: expires_after
+      schema:
+        $ref: '#/components/schemas/ExpiresAfter'
+    ExpiresBefore:
+      in: query
+      name: expires_before
+      schema:
+        $ref: '#/components/schemas/ExpiresBefore'
+    GroupId:
+      in: query
+      name: group_id
+      schema:
+        $ref: '#/components/schemas/GroupId'
+
+  schemas:
+    
+    ReferralOutboxCreateFromServiceRequest:
+      type: object
+      properties:
+        care_type:
+          $ref: '#/components/schemas/CareTypeCore'
+        referral_type:
+          $ref: '#/components/schemas/ReferralTypeCore'
+        comment:
+          type: string
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        supply_persona_id:
+          type: string
+          format: uuid
+          description: The supply organization to which the referral is destined.
+        authorization_id:
+          type: integer
+          description: Authorization to send along with the referral
+          nullable: true
+        case_manager:
+          $ref: '#/components/schemas/CaseManagerCore'
+      required:
+        - care_type
+        - referral_type
+        - start_at
+        - end_at
+        - supply_persona_id
+
+    ReferralOutboxDetailResponse:
+      # Full blown representation of an referral, with related/nested entities
+      type: object
+      properties:
+        referral:
+          $ref: '#/components/schemas/OutboxReferralCoreResponse'
+        supply:
+          $ref: '#/components/schemas/OrganizationLeanCore'
+        alayacare:
+          $ref: '#/components/schemas/AlayaCareCore'
+        case_manager:
+          $ref: '#/components/schemas/CaseManagerCore'
+        price:
+          $ref: '#/components/schemas/PriceCore'
+        client:
+          $ref: '#/components/schemas/OutboxReferralClientResponse'
+        service:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            outbox_id:
+              type: string
+              minLength: 1
+            name:
+              type: string
+              minLength: 1
+            address:
+              $ref: '#/components/schemas/AddressSchema'
+            start_at:
+              type: string
+              format: date-time
+              nullable: true
+            end_at:
+              type: string
+              format: date-time
+              nullable: true
+            instructions:
+              # CCAC includes goals and other items in ServiceInstructions
+              type: string
+              nullable: true
+            skills:
+              type: array
+              items:
+                type: string
+              nullable: true
+            custom_fields:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomFieldCore'
+          required:
+            - id
+            - outbox_id
+            - name
+        visits:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxReferralVisitResponse'
+          nullable: true
+      required:
+        - referral
+        - supply
+        - price
+        - client
+        - service
+
+    # Section: Outbox
+    IsAcceptedSchema:
+      type: boolean
+
+    OfferOutboxCore:
+      # Core fields on an offer expected to be present on requests and responses.
+      type: object
+      properties:
+        care_type:
+          $ref: '#/components/schemas/CareTypeCore'
+        offer_type:
+          $ref: '#/components/schemas/OfferTypeCore'
+        expires_at:
+          type: string
+          format: date-time
+        comment:
+          type: string
+      required:
+        - care_type
+        - offer_type
+        - expires_at
+
+    OfferOutboxPreview:
+      # Core fields on an offer expected to be present on requests and responses.
+      type: object
+      properties:
+        offer_type:
+          $ref: '#/components/schemas/OfferTypeCore'
+        expires_at:
+          type: string
+          format: date-time
+        comment:
+          type: string
+          nullable: true
+      required:
+        - offer_type
+        - expires_at
+
+    OfferOutboxCoreResponse:
+      allOf:
+        - $ref: '#/components/schemas/OfferOutboxCore'
+        - $ref: '#/components/schemas/OfferReasonCodeSchema'
+        - type: object
+          properties:
+            id:
+              type: string
+              # format: uuid
+            status:
+              $ref: '#/components/schemas/OfferStatusSchema'
+            start_at:
+              type: string
+              format: date-time
+              description: Derived from the visits
+            end_at:
+              type: string
+              format: date-time
+              description: Derived from the visits
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+              nullable: true
+            direct_supply_persona_ids:
+              description: |
+                Identifiers of one (or more) supply organization for direct-to-supplier
+                matching.
+              type: array
+              items:
+                type: string
+                format: uuid
+              nullable: true
+          required:
+            - id
+            - status
+            - start_at
+            - end_at
+            - created_at
+
+    OfferOutboxPreviewScalarResponse:
+      # Full blown representation of an offer, with related/nested entities
+        properties:
+          offer:
+            $ref: '#/components/schemas/OfferOutboxPreview'
+          price:
+            $ref: '#/components/schemas/OutboxOfferPreviewPriceSchema'
+          client:
+            type: object
+            properties:
+              outbox_id:
+                type: string
+              address:
+                $ref: '#/components/schemas/AddressSchema'
+              contacts:
+                # separate personal, medical contacts like CCAC?
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientContactSchema'
+              demographics:
+                $ref: '#/components/schemas/DemographicSchema'
+              allergies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllergySchema'
+              risks:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RiskSchema'
+              diagnoses:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DiagnosisSchema'
+              surgeries:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SurgerySchema'
+              custom_fields: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomFieldCore'
+              referral_only_custom_fields: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomFieldCore'
+          service:
+            type: object
+            properties:
+              outbox_id:
+                type: string
+              name:
+                type: string
+              instructions:
+                # CCAC includes goals and other items in ServiceInstructions
+                type: string
+                nullable: true
+              skills:
+                # should this live here or at root level or client level?
+                # should this be a string or list of strings or list of objects?
+                type: array
+                items:
+                  type: string
+                nullable: true
+              address:
+                $ref: '#/components/schemas/AddressSchema'
+                nullable: true
+              custom_fields:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomFieldCore'
+              referral_only_custom_fields:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomFieldCore'
+          visits:
+            type: array
+            items:
+              $ref: '#/components/schemas/VisitCore'
+        required:
+          - offer
+          - price
+          - client
+          - service
+          - visits
+
+    OfferOutboxScalarResponse:
+      # Full blown representation of an offer, with related/nested entities
+      type: object
+      properties:
+        offer:
+          $ref: '#/components/schemas/OfferOutboxCoreResponse'
+        demand:
+          $ref: '#/components/schemas/OrganizationLeanCore'
+        supply:
+          $ref: '#/components/schemas/OrganizationLeanCore'
+          nullable: true
+        alayacare:
+          $ref: '#/components/schemas/AlayaCareCore'
+          nullable: true
+        case_manager:
+          $ref: '#/components/schemas/CaseManagerCore'
+          nullable: true
+        direct_supply_persona_ids:
+          description: |
+            Identifiers of one (or more) supply organization for direct-to-supplier
+            matching.
+          type: array
+          items:
+            type: string
+            format: uuid
+          nullable: true
+        price:
+          $ref: '#/components/schemas/OutboxOfferPriceSchema'
+        client:
+          type: object
+          properties:
+            outbox_id:
+              type: string
+            address:
+              $ref: '#/components/schemas/AddressSchema'
+            contacts:
+              # separate personal, medical contacts like CCAC?
+              type: array
+              items:
+                $ref: '#/components/schemas/ClientContactSchema'
+            demographics:
+              $ref: '#/components/schemas/DemographicSchema'
+            allergies:
+              type: array
+              items:
+                $ref: '#/components/schemas/AllergySchema'
+            risks:
+              type: array
+              items:
+                $ref: '#/components/schemas/RiskSchema'
+            diagnoses:
+              type: array
+              items:
+                $ref: '#/components/schemas/DiagnosisSchema'
+            surgeries:
+              type: array
+              items:
+                $ref: '#/components/schemas/SurgerySchema'
+            custom_fields: 
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomFieldCore'
+            referral_only_custom_fields: 
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomFieldCore'
+        service:
+          type: object
+          properties:
+            outbox_id:
+              type: string
+            name:
+              type: string
+            instructions:
+              # CCAC includes goals and other items in ServiceInstructions
+              type: string
+              nullable: true
+            skills:
+              # should this live here or at root level or client level?
+              # should this be a string or list of strings or list of objects?
+              type: array
+              items:
+                type: string
+              nullable: true
+            address:
+              $ref: '#/components/schemas/AddressSchema'
+              nullable: true
+            custom_fields: 
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomFieldCore'
+            referral_only_custom_fields: 
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomFieldCore'
+            # CCAC service includes priority, some other codes, and nests Frequencies in Service
+          required:
+            - outbox_id
+            - name
+        visits:
+          type: array
+          items:
+            $ref: '#/components/schemas/VisitCore'
+          nullable: true
+      required:
+        - offer
+        - demand
+        - price
+        - client
+        - service
+
+    SortBySchema:
+      type: string
+      enum:
+        - last_modified
+      default: last_modified
+
+    SortOrderSchema:
+      type: string
+      enum:
+        - asc
+        - desc
+      default: desc
+
+    ExpiresAfter:
+      type: string
+      format: date-time
+
+    ExpiresBefore:
+      type: string
+      format: date-time
+
+    GroupId:
+      type: array
+      items:
+        type: integer
+      minItems: 1
+
+    OfferReasonCodeSchema:
+      description: |
+        `reason_code` associated to a cancelled or closed offer.
+      type: object
+      properties:
+        reason_code:
+          type: string
+          enum:
+          - datetime_change
+          - client_request
+          - client_hospitalization
+          - client_passed_away
+          - client_refused_service
+        reason_comment:
+          type: string
+
+    OutboxVisitDeletedRequest:
+      # TODO: Consolidate with InboxVisitDeletedRequest
+      type: object
+      properties:
+        visit_id:
+          type: number
+          format: integer
+      required:
+        - visit_id
+
+    OfferStatusSchema:
+      type: string
+      enum:
+        - open # wrapper for created + matched + sent + accepted
+        - assigned
+        - closed
+        - declined_by_all
+        - expired
+
+    CareTypeCore:
+      # sync this with the organization specs
+      type: string
+      enum:
+        - psw
+        - nursing
+      default: psw
+
+    OfferTypeCore:
+      type: string
+      enum:
+        - visit
+        - service
+        - shift
+      default: visit
+
+    OutboxOfferPriceSchema:
+      type: object
+      properties:
+        default:
+          $ref: '#/components/schemas/PriceCore'
+        custom:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomOfferPriceSchema'
+      required:
+        - default
+
+    OutboxOfferPreviewPriceSchema:
+      type: object
+      properties:
+        default:
+          $ref: '#/components/schemas/PreviewPriceSchema'
+
+    PriceCore:
+      type: object
+      properties:
+        rate:
+          type: number
+          format: decimal
+          description: The dollar amount for offer per unit.
+          example: 30.00
+        unit:
+          type: string
+          description: The unit for the rate.
+          enum:
+            - per_visit
+            - per_hour
+            - amount
+      required:
+        - rate
+        - unit
+
+    PreviewPriceSchema:
+      allOf:
+        - $ref: '#/components/schemas/PriceCore'
+        - type: object
+          properties:
+            expense_code_id:
+              type: integer
+          required:
+            - expense_code_id
+
+    CustomOfferPriceSchema:
+      allOf:
+        - $ref: '#/components/schemas/PriceCore'
+        - type: object
+          properties:
+            supply_persona_id:
+              type: integer
+          required:
+            - supply_persona_id
+
+    ClientIdSchema:
+      type: integer
+
+    VisitIdSchema:
+      type: integer
+
+    PageNumberResponse:
+      type: integer
+      minimum: 1
+      default: 1
+
+    ItemsPerPageResponse:
+      type: integer
+      minimum: 1
+      default: 100
+
+    OrganizationLeanCore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+      required:
+        - id
+        - name
+
+    OutboxReferralVisitTaskResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        is_required:
+          type: boolean
+      required:
+        - id
+        - outbox_id
+        - name
+        - is_required
+
+    TasksSchema:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+        name:
+          type: string
+        is_required:
+          type: boolean
+        description:
+          type: string
+          nullable: true
+      required:
+        - outbox_id
+        - name
+        - is_required
+
+    OutboxReferralVisitResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        outbox_id:
+          type: string
+          nullable: true
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        instructions:
+          type: string
+          nullable: true
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutboxReferralVisitTaskResponse'
+          nullable: true
+      required:
+        - id
+        - start_at
+        - end_at
+
+    VisitCore:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+          # format: uuid
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        instructions:
+          type: string
+          nullable: true
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TasksSchema'
+          nullable: true
+      required:
+        - outbox_id
+        - start_at
+        - end_at
+
+    OutboxReferralClientResponse:
+      allOf:
+        - $ref: '#/components/schemas/ClientCore'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          required:
+            - id
+
+    ClientCore:
+      type: object
+      properties:
+        outbox_id:
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressSchema'
+        contacts:
+          # separate personal, medical contacts like CCAC?
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientContactSchema'
+        demographics:
+          $ref: '#/components/schemas/DemographicSchema'
+        allergies:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllergySchema'
+        risks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RiskSchema'
+        diagnoses:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiagnosisSchema'
+        surgeries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SurgerySchema'
+        custom_fields: 
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldCore'
+
+    CustomFieldCore:
+      type: object
+      properties:
+        name:
+          type: string
+          example: my_custom_field
+        type:
+          type: string
+          example: string
+        value:
+          type: string
+          example: My Example Value
+
+    DemographicSchema:
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone_number:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+        gender:
+          # should this be enum?
+          type: string
+        language:
+          # should this be enum?
+          type: string
+          # health card, etc?
+
+    ClientContactSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          # format: uuid
+        first_name:
+          type: string
+        last_name:
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressSchema'
+        email:
+          type: string
+          format: email
+        phone_number:
+          type: string
+        language:
+          # should this be enum?
+          type: string
+        relationship:
+          # should this be enum?
+          type: string
+
+    RiskSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          # TODO: We should define a list of valid risk categories
+          type: string
+          example: "allergy"
+        severity:
+          # number ? allergy severity is a string ?
+          type: integer
+        start_date:
+          # this might be unclear
+          type: string
+          format: date
+
+    AllergySchema:
+      type: object
+      # Based on AlayaCare: medical_history.Allergies.allergies_list
+      properties:
+        # different schemas for CCAC and AlayaCare
+        name:
+          type: string
+        category:
+          type: string
+        severity:
+          type: string
+        start_date:
+          type: string
+          format: date
+        # AlayaCare has a treatment field?
+
+    DiagnosisSchema:
+      type: object
+      # Based on AlayaCare: medical_history.health_history.current_medical_history
+      properties:
+        name:
+          # AlayaCare calls this diagnosis, combines CCAC code and description
+          type: string
+        description:
+          # AlayaCare doesn't use this for the CCAC
+          type: string
+        start_date:
+          type: string
+          format: date
+
+    SurgerySchema:
+      # Based on AlayaCare: medical_history.surgery.past_surgery_history
+      type: object
+      properties:
+        name:
+          # AlayaCare combines CCAC code and description
+          type: string
+        description:
+          # AlayaCare combines CCAC location and surgeon
+          type: string
+        start_date:
+          type: string
+          format: date
+
+    AddressAnonSchema:
+      type: object
+      properties:
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country:
+          type: string
+      required:
+        - city
+        - state
+        - zip
+        - country
+
+    AddressSchema:
+      allOf:
+        - $ref: '#/components/schemas/AddressAnonSchema'
+        - type: object
+          properties:
+            name:
+              type: string
+            address:
+              type: string
+            address_suite:
+              type: string
+            latitude:
+              type: number
+              format: double
+              minimum: -90
+              maximum: 90
+            longitude:
+              type: number
+              format: double
+              minimum: -180
+              maximum: 180
+          required:
+            - name
+            - address
+            - city
+            - state
+            - zip
+            - country
+            - latitude
+            - longitude
+
+    OutboxReferralCoreResponse:
+      type: object
+      properties:
+        reason_code:
+          $ref: '#/components/schemas/ReferralReasonCodeCore'
+        id:
+          type: string
+          format: uuid
+        offer_id:
+          type: string
+          format: uuid
+          description: |
+            The ID of the AlayaMarket offer associated with this referral.
+          nullable: true
+        shift_id:
+          type: string
+          format: uuid
+          description: The ID of the shift to which this offer belongs.
+          nullable: true
+        care_type:
+          $ref: '#/components/schemas/CareTypeCore'
+        referral_type:
+          $ref: '#/components/schemas/ReferralTypeCore'
+        comment:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ReferralStatusCore'
+        start_at:
+          type: string
+          format: date-time
+          description: Derived from the visits
+        end_at:
+          type: string
+          format: date-time
+          description: Derived from the visits
+        demand_labels:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - care_type
+        - referral_type
+        - status
+        - start_at
+        - end_at
+        - created_at
+
+    ReferralReasonCodeCore:
+      description: |
+        `reason_code` for a cancelled or closed referral.
+      type: string
+      enum:
+        - datetime_change
+        - client_request
+        - client_hospitalization
+        - client_passed_away
+        - client_refused_service
+
+    ReferralStatusCore:
+      type: string
+      enum:
+        - assigned
+        - processed
+        - cancelled
+
+    ReferralTypeCore:
+      type: string
+      enum:
+        - visit
+        - service
+        # - recurrence
+
+    AlayaCareCore:
+      type: object
+      properties:
+        authorization:
+          type: object
+
+    CaseManagerCore:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        phone_number:
+          type: string
+          nullable: true
+        fax_number:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+
+  securitySchemes:
+    # NOTE: bearer auth expects a header 'Authorization: Bearer <token>'
+    #   so we will use apiKey auth
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: 'X-Alayacare-Identity'
+      x-apikeyInfoFunc: alaya.api.alayamarket.flask_app.extensions.jwt.jwt_token_verifier
+  
