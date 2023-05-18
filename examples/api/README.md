@@ -99,7 +99,8 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
 
 ### Step 3: Create the Authorization
 
-* **API reference:** External API specifications are not yet available for this endpoint. A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/authorizations/internal.authorizations.spec.yaml). 
+* **API reference:** External API specifications are not yet available for this endpoint. 
+A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/authorizations/internal.authorizations.spec.yaml). 
 
 * **URL:** `$ACCLOUD_URL/api/v1/scheduler/authorizations`
 
@@ -142,7 +143,8 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
 
 ### Step 4: Send the Referral Approval
 
-* **API reference:** External API specifications are not yet available for this endpoint. A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/referral_approval/internal.referral_approval.spec.yaml). 
+* **API reference:** External API specifications are not yet available for this endpoint. 
+A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/referral_approval/internal.referral_approval.spec.yaml). 
 
 * **URL:** `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}`
 
