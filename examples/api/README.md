@@ -3,6 +3,7 @@
 CPR+ will received a [Referral Request payload](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/examples/payloads/new_referral_request_payload.json) from a supplier agency requesting authorization to provide a service for a client. Once the request is approved, there are several ways that CPR+ can send the Referral Approval back to the supply agency. These are described in detail below. 
 
 ## Option 1: CPR+ → ACCloud CSI (HQ branch) → Marketplace -> Supply Agency
+_Recommended_
 
 In this option, CSI will sync clients, services, and authorizations from CPR+ to ACCloud CSI (HQ branch), before sending a Referral Approval from ACCloud via Marketplace to the supply agency. 
 
@@ -92,13 +93,13 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
     * The `alayacare_client_id` is the external client ID provided in Step 1
     * The `client_id` is the internal client ID returned in Step 1  
   * The service codes can be fetched from `$ACCLOUD_URL/ext/api/v2/scheduler/service_codes`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Service%20Codes/get_service_codes) 
-  * The skills can be fetched from `$ACCLOUD_URL/ext/api/v2/employees/skills`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/employee-skills-external-api/1.0.0#/Skills/get_skills) 
   * The payors/funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external/1.0.6#/Funders/get_funders)
+  * The `start_date` and `projected_end_date` are optional. These are only informative and are not used when sending referral approvals to supplier agencies. 
 
 
 ### Step 3: Create the Authorization
 
-* **API reference:** External API specifications are not yet available for this endpoint 
+* **API reference:** External API specifications are not yet available for this endpoint. A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/authorizations/internal.authorizations.spec.yaml). 
 
 * **URL:** `$ACCLOUD_URL/api/v1/scheduler/authorizations`
 
@@ -110,16 +111,10 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
       21
    ],   
    "payor_id":9,
-   "payor_id_type":"FUNDER",
    "start_date":"2023-04-01",
    "end_date":"2023-04-30",
-   "authorization_number":"111-111",
-   "member_number":"123456",
-   "program_id":"ABCDEF",
-   "case_manager_name":"Frank Winter",
-   "case_manager_email":"",
-   "case_manager_phone":"555-5555",
-   "case_manager_fax":"",
+   "payor_id_type":"FUNDER",
+   "methodology":"PAYOR_SERVICE",
    "notes":"",
    "rule_type":"HOURS",
    "rule_daily":300,
@@ -133,8 +128,6 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
    "rule_friday":null,
    "rule_saturday":null,
    "rule_sunday":null,
-   "methodology":"PAYOR_SERVICE",
-   "state_type_id":null,
    "first_day_of_week":6
 }
 ```
@@ -149,7 +142,7 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
 
 ### Step 4: Send the Referral Approval
 
-* **API reference:** External API specifications are not yet available for this endpoint 
+* **API reference:** External API specifications are not yet available for this endpoint. A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/referral_approval/internal.referral_approval.spec.yaml). 
 
 * **URL:** `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}`
 
@@ -169,11 +162,13 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
   * The `service_id` is the internal service ID returned when creating a service in Step 2 
   * The `authorization_id` is the internal authorization ID and is returned when creating an authorization in Step 3
   * The `supply_persona_id` must be set to the `alayamarket_org_id` from the [referral request payload](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/examples/payloads/new_referral_request_payload.json#L7)  
+  * If an `authorization_id` is provided, the `start_date` and `end_date` of the authorization must match the date components of the referral approval `start_at` and `end_at`. 
 
 
 ## Option 2: CPR+ → Marketplace -> Supply Agency
+_Not Recommended_
 
-In this option, CSI will send the Referral Approval from CPR+ via Marketplace to the supply agency. 
+In this option, CSI will send the Referral Approval from CPR+ via Marketplace to the supply agency. This will skip storing clients, services, and authorizations in ACCloud CSI (HQ). This also means that referral approvals cannot be sent from ACCloud CSI (HQ).
 
 * **Host:** `MARKETPLACE_URL = https://api.sandbox.alayamarket.com`  
 
