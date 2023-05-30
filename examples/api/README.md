@@ -164,6 +164,7 @@ A snapshot of the internal API specifications can be found [here](https://github
   * The `service_id` is the internal service ID returned when creating a service in Step 2 
   * The `authorization_id` is the internal authorization ID and is returned when creating an authorization in Step 3
   * The `supply_persona_id` must be set to the `alayamarket_org_id` from the [referral request payload](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/examples/payloads/new_referral_request_payload.json#L7)  
+    * You can get a list of your suppliers from `$ACCLOUD_URL/api/v1/alayamarket/outbox/organizations/trusted_network`
   * If an `authorization_id` is provided, the `start_date` and `end_date` of the authorization must match the date components of the referral approval `start_at` and `end_at`. 
 
 
