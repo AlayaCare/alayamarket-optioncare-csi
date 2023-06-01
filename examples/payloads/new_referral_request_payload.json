@@ -210,6 +210,13 @@
          },
          {
             "type":null,
+            "field_id":437,
+            "field_type":"checkbox",
+            "field_label":"Secondary insurance needed?",
+            "field_value":true
+         },
+         {
+            "type":null,
             "field_id":332,
             "field_type":"text",
             "field_label":"Secondary insurance name",
@@ -265,20 +272,6 @@
             "field_value":"janesmithers@example.com"
          },
          {
-            "type":"text",
-            "field_id":340,
-            "field_type":"demographics",
-            "field_label":"First Name",
-            "field_value":"Jane"
-         },
-         {
-            "type":"text",
-            "field_id":341,
-            "field_type":"demographics",
-            "field_label":"Last Name",
-            "field_value":"Smithers"
-         },
-         {
             "type":"bday",
             "field_id":342,
             "field_type":"demographics",
@@ -329,18 +322,6 @@
             "field_type":"demographics",
             "field_label":"Zip Code",
             "field_value":"45458"
-         },
-         {
-            "type":"list",
-            "field_id":349,
-            "field_type":"demographics",
-            "field_label":"Country",
-            "field_value":{
-               "option":{
-                  "name":"US",
-                  "value":"US"
-               }
-            }
          }
       ]
    }
