@@ -19,7 +19,11 @@ Custom forms are used to capture data about the client and service that the supp
 
 The form template can be viewed in the application [here](https://csi.uat.alayacare.com/#/system-settings/forms), and it's definition can be found [here](https://csi.uat.alayacare.com/api/v1/tasks/forms20/forms/11). 
 
-When a form is filled and submitted, AlayaConnector will gather the form submission data and other relevant metadata to send to CPR+. An example of the payload sent to CPR+ can be found in [new_referral_request_payload.json](examples/payloads/new_referral_request_payload.json). The OpenAPI specification for this data is defined in [referral_request.spec.yaml](specs/referral_request/referral_request.spec.yaml).
+When a form is filled and submitted, AlayaConnector will gather the form submission data and other relevant metadata to send to CPR+. An example of the payload sent to CPR+ can be found in [new_referral_request_payload.json](examples/payloads/new_referral_request_payload.json). The OpenAPI specification for this data is defined in [referral_request.spec.yaml](specs/referral_request/referral_request.spec.yaml). 
+
+**Note that the `field_id` value in the payload is a primary key and will vary on each environment.**
+
+
 
 ### Step 2. CPR+ processes the Referral Request
 Once the Referral Request data has been received by CPR+, it will be reviewed. CPR+ will keep a record of the client, service, and approved authorizations for the service. Once approved, CPR+ will send a Referral Approval to the supply agency so they can beging providing care. 
