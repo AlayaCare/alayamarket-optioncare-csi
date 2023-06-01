@@ -173,7 +173,9 @@ A snapshot of the internal API specifications can be found [here](https://github
 
 In this option, CSI will send the Referral Approval from CPR+ via Marketplace to the supply agency. This will skip storing clients, services, and authorizations in ACCloud CSI (HQ). This also means that referral approvals cannot be sent from ACCloud CSI (HQ).
 
-* **Host:** `MARKETPLACE_URL = https://api.sandbox.alayamarket.com`  
+* **Host:** `MARKETPLACE_URL`:
+  * https://api.sandbox.alayamarket.com (sandboxed environment for testing)
+  * https://api.prod.alayamarket.com (production environment)
 
 * **Authentication:** Bearer (token) authentication 
   * For more details see the [Marketplace user guide](https://alayacare.github.io/alayamarket-external-docs/docs/user_guide/)
