@@ -190,9 +190,9 @@
          {
             "type":null,
             "field_id":328,
-            "field_type":"number",
+            "field_type":"text",
             "field_label":"Primary subscriber ID",
-            "field_value":1111111
+            "field_value":"1111111"
          },
          {
             "type":null,
@@ -239,9 +239,9 @@
          {
             "type":null,
             "field_id":335,
-            "field_type":"number",
+            "field_type":"text",
             "field_label":"Secondary subscriber ID",
-            "field_value":2222222
+            "field_value":"2222222"
          },
          {
             "type":null,
