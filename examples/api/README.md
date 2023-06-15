@@ -14,6 +14,8 @@ In this option, CSI will sync clients, services, and authorizations from CPR+ to
   * PROD: `https://csi.alayacare.com` (not available yet)
 * **Authentication:** Basic authentication using API keys 
 
+The options below are based on entities that exist on `https://csi.uat.alayacare.com`. 
+
 ### Step 1: Create the Client
 
 * **API reference:** [client-api-external](https://app.swaggerhub.com/apis/AlayaCare/client-api-external/1.0.6#/Clients/post_clients) 
@@ -110,7 +112,7 @@ A snapshot of the internal API specifications can be found [here](https://github
    "client_id":1060,
    "service_ids":[
       21
-   ],   
+   ],
    "payor_id":9,
    "start_date":"2023-04-01",
    "end_date":"2023-04-30",
@@ -129,7 +131,11 @@ A snapshot of the internal API specifications can be found [here](https://github
    "rule_friday":null,
    "rule_saturday":null,
    "rule_sunday":null,
-   "first_day_of_week":6
+   "first_day_of_week":6, 
+   "case_manager_name": "Jane Smith", 
+   "case_manager_phone": "515-111-2233", 
+   "case_manager_fax": null, 
+   "case_manager_email": "jane.smith@email.com"
 }
 ```
 
@@ -138,6 +144,8 @@ A snapshot of the internal API specifications can be found [here](https://github
   * The `client_id` is the internal client ID returned when creating a client in Step 1
   * The `service_ids` is the internal service ID returned when creating a service in Step 2 
   * The `payor_id` is the internal payor/funder ID, and can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external/1.0.6#/Funders/get_funders)
+  * The `case_manager_*` fields are optional. This will be stored on the HQ branch only and will not be sent to the supply agency. 
+    * To send a case manager to the supply agency, see Step 4. 
   * The response returned when creating an authorization will include the internal authorization ID
 
 
@@ -156,7 +164,13 @@ A snapshot of the internal API specifications can be found [here](https://github
    "referral_type":"service",
    "care_type":"nursing",
    "start_at":"2023-04-01T05:00:00+00:00",
-   "end_at":"2023-04-30T05:00:00+00:00"
+   "end_at":"2023-04-30T05:00:00+00:00", 
+   "case_manager": {
+     "name": "Jane Smith", 
+     "phone_number": "515-111-2233", 
+     "fax_number": null, 
+     "email": "jane.smith@email.com"
+   }
 }
 ```
 
@@ -166,6 +180,7 @@ A snapshot of the internal API specifications can be found [here](https://github
   * The `supply_persona_id` must be set to the `alayamarket_org_id` from the [referral request payload](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/examples/payloads/new_referral_request_payload.json#L7)  
     * You can get a list of your suppliers from `$ACCLOUD_URL/api/v1/alayamarket/outbox/organizations/trusted_network`
   * If an `authorization_id` is provided, the `start_date` and `end_date` of the authorization must match the date components of the referral approval `start_at` and `end_at`. 
+  * The `case_manager` from the authorization in Step 3 will not be automatically sent to the supply agency, and should be specified as required during this step. 
 
 
 ## Option 2: CPR+ → Marketplace -> Supply Agency
