@@ -144,6 +144,7 @@ A snapshot of the internal API specifications can be found [here](https://github
   * The `client_id` is the internal client ID returned when creating a client in Step 1
   * The `service_ids` is the internal service ID returned when creating a service in Step 2 
   * The `payor_id` is the internal payor/funder ID, and can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external/1.0.6#/Funders/get_funders)
+  * The `notes` are not currently being sent to the supply agency. This will be supported soon. 
   * The `case_manager_*` fields are optional. This will be stored on the HQ branch only and will not be sent to the supply agency. 
     * To send a case manager to the supply agency, see Step 4. 
   * The response returned when creating an authorization will include the internal authorization ID
