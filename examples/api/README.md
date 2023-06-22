@@ -62,7 +62,7 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
 
 * **API reference:** [service-api-external](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Services/post_services) 
 
-* **URL:** `$ACCLOUD_URL/ext/api/v2/scheduler/services`
+* **URL:** `POST $ACCLOUD_URL/ext/api/v2/scheduler/services`
 
 * **Example payload:**
 ```json
@@ -104,7 +104,7 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
 * **API reference:** External API specifications are not yet available for this endpoint. 
 A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/authorizations/internal.authorizations.spec.yaml). 
 
-* **URL:** `$ACCLOUD_URL/api/v1/scheduler/authorizations`
+* **URL:** `POST $ACCLOUD_URL/api/v1/scheduler/authorizations`
 
 * **Example payload:**
 ```json
@@ -119,6 +119,9 @@ A snapshot of the internal API specifications can be found [here](https://github
    "payor_id_type":"FUNDER",
    "methodology":"PAYOR_SERVICE",
    "notes":"",
+   "authorization_number": "123-456", 
+   "member_number": "123-456",  
+   "program_id": "123-456", 
    "rule_type":"HOURS",
    "rule_daily":300,
    "rule_weekly":6000,
@@ -145,17 +148,37 @@ A snapshot of the internal API specifications can be found [here](https://github
   * The `service_ids` is the internal service ID returned when creating a service in Step 2 
   * The `payor_id` is the internal payor/funder ID, and can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external/1.0.6#/Funders/get_funders)
   * The `notes` are not currently being displayed in the supply agency referral details. This will be supported soon. 
+  * `authorization_number`, `member_number` and `program_id` are optional fields that can be used to identify the authorization. 
   * The `case_manager_*` fields are optional. This will be stored on the HQ branch only and will not be sent to the supply agency. 
     * To send a case manager to the supply agency, see Step 4. 
   * The response returned when creating an authorization will include the internal authorization ID
 
+#### Step 3.1: Update the Authorization
+
+* **URL:** `PUT $ACCLOUD_URL/api/v1/scheduler/authorizations/{authorization_id}`
+
+* **Example payload:**
+```json
+{
+   "start_date":"2023-04-01",
+   "end_date":"2023-04-30",
+   "notes":"",
+   "authorization_number": "123-456", 
+   "member_number": "123-456",  
+   "program_id": "123-456", 
+   "case_manager_name": "Jane Smith", 
+   "case_manager_phone": "515-111-2233", 
+   "case_manager_fax": null, 
+   "case_manager_email": "jane.smith@email.com"
+}
+```
 
 ### Step 4: Send the Referral Approval
 
 * **API reference:** External API specifications are not yet available for this endpoint. 
 A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/referral_approval/internal.referral_approval.spec.yaml). 
 
-* **URL:** `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}`
+* **URL:** `POST $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}`
 
 * **Example payload:**
 ```json
@@ -166,6 +189,7 @@ A snapshot of the internal API specifications can be found [here](https://github
    "care_type":"nursing",
    "start_at":"2023-04-01T05:00:00+00:00",
    "end_at":"2023-04-30T05:00:00+00:00", 
+   "comment": "", 
    "case_manager": {
      "name": "Jane Smith", 
      "phone_number": "515-111-2233", 
@@ -183,6 +207,34 @@ A snapshot of the internal API specifications can be found [here](https://github
   * If an `authorization_id` is provided, the `start_date` and `end_date` of the authorization must match the date components of the referral approval `start_at` and `end_at`. 
   * The `case_manager` from the authorization in Step 3 will not be automatically sent to the supply agency, and should be specified as required during this step. 
 
+#### Step 4.1: Update the Referral Approval
+
+* **URL:** `PUT $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}/update/{referral_id}`
+
+* **Example payload:**
+```json
+{
+   "authorization_id":8, 
+   "start_at":"2023-04-01T05:00:00+00:00",
+   "end_at":"2023-04-30T05:00:00+00:00", 
+   "comment": "", 
+   "case_manager": {
+     "name": "Jane Smith", 
+     "phone_number": "515-111-2233", 
+     "fax_number": null, 
+     "email": "jane.smith@email.com"
+   }, 
+   "revision": {
+      "reasons": [
+         "Updated authorization end date"
+      ], 
+      "comment": ""
+   }
+}
+```
+* **Notes:**
+  * The `referral_id` is the referral ID returned when creating a referral approval in Step 4. 
+  * The updated referral will include any updates to the client, service, and authorization.
 
 ## Option 2: CPR+ → Marketplace -> Supply Agency
 

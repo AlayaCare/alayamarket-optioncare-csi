@@ -48,6 +48,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/ReferralOutboxDetailResponse'
 
+
+  /outbox/referrals/from_service/{service_id}/update/{referral_id}:
+    parameters:
+    - in: path
+      name: service_id
+      schema:
+        type: integer
+      required: true
+      description: The ID of a service.
+    - in: path
+      name: referral_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: The ID of a referral.
+    post:
+      operationId: alaya.api.alayamarket.outbox.entrypoints.update_referral_for_service
+      tags:
+        - Outbox - Referrals
+      description: |
+        # Authorization
+        Required ACL: `SCHEDULE_MARKETPLACE_OFFERS_MANAGE = 'schedule/marketplace/offers/manage'`
+
+        # Description
+        Update a Referral for a service.
+        This will first aggregate the required data for the Referral.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutboxReferralUpdateFromServiceRequest'
+      responses:
+        201:
+          description: "Successfully updated the referral."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboxReferralDetailResponse'
+
 security:
   # all endpoints are authenticated using tokens by default
   - tokenAuth: []
@@ -160,6 +201,43 @@ components:
         - start_at
         - end_at
         - supply_persona_id
+
+    OutboxReferralUpdateFromServiceRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          nullable: true
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        authorization_id:
+          type: integer
+          description: Authorization to send along with the referral
+          nullable: true
+        case_manager:
+          $ref: '#/components/schemas/CaseManagerCore'
+          nullable: true
+        revision:
+          type: object
+          properties:
+            reasons:
+              type: array
+              items:
+                type: string
+              minItems: 1
+            comment:
+              type: string
+              nullable: true
+          required:
+            - reasons
+      required:
+        - start_at
+        - end_at
+        - revision
 
     ReferralOutboxDetailResponse:
       # Full blown representation of an referral, with related/nested entities
