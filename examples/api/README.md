@@ -231,9 +231,10 @@ A snapshot of the internal API specifications can be found [here](https://github
       "comment": ""
    }
 }
-
+```
 * **Notes:**
-  * The `referral_id` is the referral ID returned when creating a referral approval in Step 4
+  * The `referral_id` is the referral ID returned when creating a referral approval in Step 4. 
+  * The updated referral will include any updates to the client, service, and authorization.
 
 ## Option 2: CPR+ → Marketplace -> Supply Agency
 
