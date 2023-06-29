@@ -85,7 +85,10 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
    ],
    "service_code_id":48,
    "service_instructions":"Please use buzz code 203",
-   "use_client_address":true
+   "use_client_address":true, 
+   "profile": {
+      "target_agency": "Gem City Home Care"
+   }
 }
 ```
 
