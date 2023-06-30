@@ -169,6 +169,7 @@ A snapshot of the internal API specifications can be found [here](https://github
    "authorization_number": "123-456", 
    "member_number": "123-456",  
    "program_id": "123-456", 
+   "rule_type":"HOURS",
    "case_manager_name": "Jane Smith", 
    "case_manager_phone": "515-111-2233", 
    "case_manager_fax": null, 
