@@ -219,6 +219,7 @@ A snapshot of the internal API specifications can be found [here](https://github
 ```json
 {
    "authorization_id":8, 
+   "supply_persona_id":"91c79089-a3ca-4cca-acf4-52fc1f1302c6",
    "start_at":"2023-04-01T05:00:00+00:00",
    "end_at":"2023-04-30T05:00:00+00:00", 
    "comment": "", 
