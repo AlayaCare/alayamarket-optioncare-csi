@@ -213,7 +213,7 @@ A snapshot of the internal API specifications can be found [here](https://github
 
 #### Step 4.1: Update the Referral Approval
 
-* **URL:** `PUT $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}/update/{referral_id}`
+* **URL:** `POST $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/from_service/{service_id}/update/{referral_id}`
 
 * **Example payload:**
 ```json
