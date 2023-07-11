@@ -97,8 +97,8 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
   * The `client` can reference only one of `alayacare_client_id` or `client_id`
     * The `alayacare_client_id` is the external client ID provided in Step 1
     * The `client_id` is the internal client ID returned in Step 1  
-  * The service codes can be fetched from `$ACCLOUD_URL/ext/api/v2/scheduler/service_codes`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Service%20Codes/get_service_codes) 
   * The payors/funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external/1.0.6#/Funders/get_funders)
+  * The service codes can be fetched from `$ACCLOUD_URL/ext/api/v2/scheduler/service_codes`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Service%20Codes/get_service_codes) 
   * The `start_date` and `projected_end_date` are optional. These are only informative and are not used when sending referral approvals to supplier agencies. 
 
 
