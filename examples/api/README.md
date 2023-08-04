@@ -240,10 +240,8 @@ A snapshot of the internal API specifications can be found [here](https://github
 * **Notes:**
   * The `referral_id` is the referral ID returned when creating a referral approval in Step 4.
     * This must be the latest referral revision.
-    * If you would like to get all the revisions for a given referral, you can use the referral `revision_group_id`​: 
-`$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>&revisions=all`
-   * If you would like to get the latest revision, use `revisions=all` or omit this (as it is the defaul value): 
-`$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>`
+    * If you would like to get all the revisions for a given referral, you can use the referral `revision_group_id`​: `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>&revisions=all`
+    * If you would like to get the latest revision, use `revisions=all` or omit this (as it is the defaul value): `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>`
   * The updated referral will include any updates to the client, service, and authorization.
 
 ## Option 2: CPR+ → Marketplace -> Supply Agency
