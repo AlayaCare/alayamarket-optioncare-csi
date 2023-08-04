@@ -3,7 +3,7 @@
 CPR+ will received a [Referral Request payload](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/examples/payloads/new_referral_request_payload.json) from a supplier agency requesting authorization to provide a service for a client. Once the request is approved, there are several ways that CPR+ can send the Referral Approval back to the supply agency. These are described in detail below. 
 
 ## Option 1: CPR+ → ACCloud CSI (HQ branch) → Marketplace -> Supply Agency
-_This is the recommended approach._
+__This is the selected approach.__
 
 In this option, CSI will sync clients, services, and authorizations from CPR+ to ACCloud CSI (HQ branch), before sending a Referral Approval from ACCloud via Marketplace to the supply agency. 
 
@@ -238,11 +238,16 @@ A snapshot of the internal API specifications can be found [here](https://github
 }
 ```
 * **Notes:**
-  * The `referral_id` is the referral ID returned when creating a referral approval in Step 4. 
+  * The `referral_id` is the referral ID returned when creating a referral approval in Step 4.
+    * This must be the latest referral revision.
+    * If you would like to get all the revisions for a given referral, you can use the referral `revision_group_id`​: 
+`$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>&revisions=all`
+   * If you would like to get the latest revision, use `revisions=all` or omit this (as it is the defaul value): 
+`$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>`
   * The updated referral will include any updates to the client, service, and authorization.
 
 ## Option 2: CPR+ → Marketplace -> Supply Agency
-
+__We will not use this approach__
 
 In this option, CSI will send the Referral Approval from CPR+ via Marketplace to the supply agency. This will skip storing clients, services, and authorizations in ACCloud CSI (HQ). This also means that referral approvals cannot be sent from ACCloud CSI (HQ).
 
