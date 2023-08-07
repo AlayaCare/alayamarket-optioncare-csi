@@ -161,14 +161,12 @@ A snapshot of the internal API specifications can be found [here](https://github
 * **Example payload:**
 ```json
 {
-   "client_id":1060,
    "start_date":"2023-04-01",
+   "rule_type":"HOURS",
    "end_date":"2023-04-30",
-   "methodology":"SERVICE",
    "authorization_number": "123-456", 
    "member_number": "123-456",  
    "program_id": "123-456", 
-   "rule_type":"HOURS",
    "notes":"",
    "case_manager_name": "Jane Smith", 
    "case_manager_phone": "515-111-2233", 
@@ -176,6 +174,11 @@ A snapshot of the internal API specifications can be found [here](https://github
    "case_manager_email": "jane.smith@email.com"
 }
 ```
+
+* **Notes:**
+  * `start_date` should not change, and soon will not be accepted when updating authoirzations.
+  * `rule_type` should not change, and soon will not be accepted when updating authoirzations.
+ 
 
 ### Step 4: Send the Referral Approval
 
