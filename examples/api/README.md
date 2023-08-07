@@ -190,7 +190,7 @@ A snapshot of the internal API specifications can be found [here](https://github
 * **Example payload:**
 ```json
 {
-   "authorization_id":8, 
+   "authorization_ids":[8], 
    "supply_persona_id":"91c79089-a3ca-4cca-acf4-52fc1f1302c6",
    "referral_type":"service",
    "care_type":"nursing",
@@ -208,10 +208,10 @@ A snapshot of the internal API specifications can be found [here](https://github
 
 * **Notes:**
   * The `service_id` is the internal service ID returned when creating a service in Step 2 
-  * The `authorization_id` is the internal authorization ID and is returned when creating an authorization in Step 3
+  * The `authorization_ids` is a list of the internal authorization IDs and is returned when creating an authorization in Step 3
   * The `supply_persona_id` must be set to the `alayamarket_org_id` from the [referral request payload](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/examples/payloads/new_referral_request_payload.json#L7)  
     * You can get a list of your suppliers from `$ACCLOUD_URL/api/v1/alayamarket/outbox/organizations/trusted_network`
-  * If an `authorization_id` is provided, the `start_date` and `end_date` of the authorization must match the date components of the referral approval `start_at` and `end_at`. 
+  * If `authorization_ids` is provided, the `start_date` and `end_date` of the authorization must match the date components of the referral approval `start_at` and `end_at`. 
   * The `case_manager` from the authorization in Step 3 will not be automatically sent to the supply agency, and should be specified as required during this step. 
 
 #### Step 4.1: Update the Referral Approval
