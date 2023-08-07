@@ -163,6 +163,7 @@ A snapshot of the internal API specifications can be found [here](https://github
 * **Example payload:**
 ```json
 {
+   "client_id":1060,
    "start_date":"2023-04-01",
    "end_date":"2023-04-30",
    "notes":"",
