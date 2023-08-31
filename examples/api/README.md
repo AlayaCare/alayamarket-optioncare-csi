@@ -104,10 +104,12 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
 
 ### Step 3: Create the Authorization
 
-* **API reference:** External API specifications are not yet available for this endpoint. 
-A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/authorizations/internal.authorizations.spec.yaml). 
+* **API reference:** [authorization-api-external](https://app.swaggerhub.com/apis/AlayaCare/authorizations-external_api/1.0.0#/Authorizations) 
 
-* **URL:** `POST $ACCLOUD_URL/api/v1/scheduler/authorizations`
+* **URL:** `POST $ACCLOUD_URL/ext/api/v2/scheduler/authorizations`
+
+**WARNING**: 
+* We need timezones on the start and end dates
 
 * **Example payload:**
 ```json
@@ -116,34 +118,35 @@ A snapshot of the internal API specifications can be found [here](https://github
    "service_ids":[
       21
    ],
-   "start_date":"2023-04-01",
-   "end_date":"2023-04-30",
-   "methodology":"SERVICE",
+   "start_at":"2023-10-01",
+   "end_at":"2023-10-30",
+   "methodology":"service",
    "authorization_number": "123-456", 
    "member_number": "123-456",  
    "program_id": "123-456", 
    "notes":"",
    "rule_type":"HOURS",
-   "rule_daily":300,
-   "rule_weekly":6000,
-   "rule_monthly":null,
-   "rule_period":null,
-   "rule_monday":null,
-   "rule_tuesday":null,
-   "rule_wednesday":null,
-   "rule_thursday":null,
-   "rule_friday":null,
-   "rule_saturday":null,
-   "rule_sunday":null,
+   "rule_daily":2,  
+   "rule_weekly":10,
+   "rule_monthly":40,
+   "rule_period":50,
+   "rule_monday":1,
+   "rule_tuesday":1,
+   "rule_wednesday":1,
+   "rule_thursday":1,
+   "rule_friday":1,
+   "rule_saturday":0,
+   "rule_sunday":0,
    "first_day_of_week":6, 
    "case_manager_name": "Jane Smith", 
-   "case_manager_phone": "515-111-2233", 
-   "case_manager_fax": null, 
+   "case_manager_phone": "515-111-2222", 
+   "case_manager_fax": "515-111-3333", 
    "case_manager_email": "jane.smith@email.com"
 }
 ```
 
 * **Notes:**
+  * `rule_daily` cannot be used with any `rule_<day>` fields
   * Payors/Funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`
   * The `client_id` is the internal client ID returned when creating a client in Step 1
   * The `service_ids` is the internal service ID returned when creating a service in Step 2 
@@ -156,21 +159,19 @@ A snapshot of the internal API specifications can be found [here](https://github
 
 #### Step 3.1: Update the Authorization
 
-* **URL:** `PUT $ACCLOUD_URL/api/v1/scheduler/authorizations/{authorization_id}`
+* **URL:** `PUT $ACCLOUD_URL/ext/api/v2/scheduler/authorizations/{authorization_id}`
 
 * **Example payload:**
 ```json
 {
-   "start_date":"2023-04-01",
-   "rule_type":"HOURS",
-   "end_date":"2023-04-30",
+   "end_at":"2023-11-30",
+   "notes":"",
    "authorization_number": "123-456", 
    "member_number": "123-456",  
    "program_id": "123-456", 
-   "notes":"",
    "case_manager_name": "Jane Smith", 
    "case_manager_phone": "515-111-2233", 
-   "case_manager_fax": null, 
+   "case_manager_fax": "515-111-3333", 
    "case_manager_email": "jane.smith@email.com"
 }
 ```
