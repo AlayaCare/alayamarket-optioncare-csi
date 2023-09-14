@@ -104,7 +104,7 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
 
 ### Step 3: Create the Authorization
 
-* **API reference:** [authorization-api-external](https://app.swaggerhub.com/apis/AlayaCare/authorizations-external_api/1.0.0#/Authorizations) 
+* **API reference:** [authorization-api-external](https://app.swaggerhub.com/apis/AlayaCare/authorizations-external_api/1.1.0) 
 
 * **URL:** `POST $ACCLOUD_URL/ext/api/v2/scheduler/authorizations`
 
