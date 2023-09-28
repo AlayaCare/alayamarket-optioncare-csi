@@ -177,9 +177,17 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
 ```
 
 * **Notes:**
-  * `start_date` should not change, and soon will not be accepted when updating authoirzations.
-  * `rule_type` should not change, and soon will not be accepted when updating authoirzations.
+  * `start_date` should not change, and soon will not be accepted when updating authorizations.
+  * `rule_type` should not change, and soon will not be accepted when updating authorizations.
+
  
+#### Step 3.2: Delete the Authorization
+
+* **URL:** `DELETE $ACCLOUD_URL/ext/api/v2/scheduler/authorizations/{authorization_id}`
+
+* **Notes:**
+  * If you require udpating the authorization start date or frequency details, instead you must delete the old authorization and create a new one
+  
 
 ### Step 4: Send the Referral Approval
 
