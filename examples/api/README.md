@@ -256,8 +256,8 @@ A snapshot of the internal API specifications can be found [here](https://github
     * If you would like to get the latest revision, use `revisions=all` or omit this (as it is the default value): `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>`
   * The updated referral will include any updates to the client, service, and authorization.
 
-## Option 2: CPR+ → Marketplace -> Supply Agency
-__We will not use this approach__
+## [DO NOT USE] Option 2: CPR+ → Marketplace -> Supply Agency
+__We will not use this approach, we have decided to use Option 1__
 
 In this option, CSI will send the Referral Approval from CPR+ via Marketplace to the supply agency. This will skip storing clients, services, and authorizations in ACCloud CSI (HQ). This also means that referral approvals cannot be sent from ACCloud CSI (HQ).
 
