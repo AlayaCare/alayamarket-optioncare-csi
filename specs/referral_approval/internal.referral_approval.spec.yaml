@@ -87,7 +87,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OutboxReferralDetailResponse'
+                $ref: '#/components/schemas/ReferralOutboxDetailResponse'
 
 security:
   # all endpoints are authenticated using tokens by default
@@ -189,9 +189,12 @@ components:
           type: string
           format: uuid
           description: The supply organization to which the referral is destined.
-        authorization_id:
-          type: integer
-          description: Authorization to send along with the referral
+        authorization_ids:
+          type: array
+          items:
+            type: integer
+          description: |
+            Outbox ids of authorizations to send along with the referral
           nullable: true
         case_manager:
           $ref: '#/components/schemas/CaseManagerCore'
@@ -214,10 +217,13 @@ components:
         end_at:
           type: string
           format: date-time
-        authorization_id:
-          type: integer
-          description: Authorization to send along with the referral
-          nullable: true
+        authorization_ids:
+          type: array
+          items:
+            type: integer
+          description: |
+            Outbox ids of authorizations to send along with the referral
+          nullable: true        
         case_manager:
           $ref: '#/components/schemas/CaseManagerCore'
           nullable: true
