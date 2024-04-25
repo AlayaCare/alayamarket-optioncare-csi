@@ -255,6 +255,26 @@ A snapshot of the internal API specifications can be found [here](https://github
     * If you would like to get all the revisions for a given referral, you can use the referral `revision_group_id`​: `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>&revisions=all`
     * If you would like to get the latest revision, use `revisions=all` or omit this (as it is the default value): `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>`
   * The updated referral will include any updates to the client, service, and authorization.
+ 
+ 
+#### Step 4.1: Cancel the Referral Approval
+
+* **URL:** `POST $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/{referral_id}/cancel`
+
+* **Example payload:**
+```json
+{
+   "reason_code": "datetime_change"
+}
+```
+* **Notes:**
+  * A `reason_code` must be provided, and must be one of:
+    * `"datetime_change", `"client_request"`, `"client_hospitalization"`, `"client_passed_away"`, `"client_refused_service"`
+  * The `referral_id` is the referral ID returned when creating a referral approval in Step 4.
+    * This must be the latest referral revision.
+    * If you would like to get all the revisions for a given referral, you can use the referral `revision_group_id`​: `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>&revisions=all`
+    * If you would like to get the latest revision, use `revisions=all` or omit this (as it is the default value): `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>`
+  * The updated referral will include any updates to the client, service, and authorization.
 
 ## [DO NOT USE] Option 2: CPR+ → Marketplace -> Supply Agency
 __We will not use this approach, we have decided to use Option 1__
