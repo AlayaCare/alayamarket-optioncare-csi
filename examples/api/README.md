@@ -257,7 +257,7 @@ A snapshot of the internal API specifications can be found [here](https://github
   * The updated referral will include any updates to the client, service, and authorization.
  
  
-#### Step 4.1: Cancel the Referral Approval
+#### Step 4.2: Cancel the Referral Approval
 
 * **URL:** `POST $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/{referral_id}/cancel`
 
