@@ -264,12 +264,13 @@ A snapshot of the internal API specifications can be found [here](https://github
 * **Example payload:**
 ```json
 {
-   "reason_code": "datetime_change"
+   "reason_code": "processing_error"
 }
 ```
 * **Notes:**
   * A `reason_code` must be provided, and must be one of:
-    * `"datetime_change"`, `"client_request"`, `"client_hospitalization"`, `"client_passed_away"`, `"client_refused_service"`
+    * `"datetime_change"`, `"client_request"`, `"client_hospitalization"`, `"client_passed_away"`, `"client_refused_service"`, `"processing_error"`, `"other"`.
+  * A `comment` can also be provided but is not required.
   * The `referral_id` is the referral ID returned when creating a referral approval in Step 4.
     * This must be the latest referral revision.
     * If you would like to get all the revisions for a given referral, you can use the referral `revision_group_id`​: `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>&revisions=all`
