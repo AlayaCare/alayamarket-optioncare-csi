@@ -89,6 +89,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/ReferralOutboxDetailResponse'
 
+  /outbox/referrals/{referral_id}/client_attachment:
+    parameters:
+    - in: path
+      name: referral_id
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: The ID of any referral of a sequence.
+    post:
+      operationId: alaya.api.alayamarket.outbox.entrypoints.upload_referral_client_attachment
+      tags:
+        - Outbox - Referrals
+      description: |
+        # Authorization
+        Required ACL: `SCHEDULE_MARKETPLACE_OFFERS_MANAGE = 'schedule/marketplace/offers/manage'`
+
+        # Description
+        Upload a client attachment file for a sequence of referrals.
+
+        **Filename must be posted as part of the file binary.**
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OutboxReferralUploadClientAttachmentRequest'
+      responses:
+        201:
+          description: "Successfully uploaded the attachment."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboxReferralUploadClientAttachmentResponse'
+
 security:
   # all endpoints are authenticated using tokens by default
   - tokenAuth: []
@@ -245,6 +280,23 @@ components:
         - end_at
         - revision
 
+    OutboxReferralUploadClientAttachmentRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+      required:
+        - file
+
+    OutboxReferralUploadClientAttachmentResponse:
+      type: object
+      properties:
+        filepath:
+          type: string
+      required:
+        - filepath
+
     ReferralOutboxDetailResponse:
       # Full blown representation of an referral, with related/nested entities
       type: object
@@ -311,6 +363,7 @@ components:
         - price
         - client
         - service
+
 
     # Section: Outbox
     IsAcceptedSchema:
