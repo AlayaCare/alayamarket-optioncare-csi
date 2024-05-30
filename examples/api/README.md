@@ -1,4 +1,4 @@
-
+**
 # CPR+ sends the Referral Approval to the Supply Agency
 CPR+ will received a [Referral Request payload](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/examples/payloads/new_referral_request_payload.json) from a supplier agency requesting authorization to provide a service for a client. Once the request is approved, there are several ways that CPR+ can send the Referral Approval back to the supply agency. These are described in detail below. 
 
@@ -277,6 +277,36 @@ A snapshot of the internal API specifications can be found [here](https://github
     * If you would like to get the latest revision, use `revisions=all` or omit this (as it is the default value): `$ACCLOUD_URL/api/v1/alayamarket/outbox/referrals?revision_group_id=<revision_group_id>`
   * The updated referral will include any updates to the client, service, and authorization.
 
+### Step 5: Send the Referral Documents
+
+Sending referral documents will first save the documents in the HQ branch under Client > Attachments > Marketplace Documents before sharing the file with the agency. 
+
+* **API reference:** External API specifications are not yet available for this endpoint. 
+A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/referral_approval/internal.referral_approval.spec.yaml). 
+
+* **URL:** `POST $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/{referral_id}/client_attachment`
+
+* **Example payload:** This endpoint expects a binary payload containing the file name and content. 
+
+Here is an example for how to do this using [httpie](https://httpie.io/):
+```
+http -f POST $ACCLOUD_URL/api/v1/alayamarket/outbox/referrals/$REFERRAL_ID/client_attachment file@/path/to/file.ext -a $USERNAME:$PASSWORD
+```
+
+Here is an example for how to do this using python: 
+```
+import requests
+
+url = f"{accloud_url}/api/v1/alayamarket/outbox/referrals/{referral_id}/client_attachment"
+with open("/path/to/file.ext", "rb") as file:
+    data = dict(file=("file.ext", file))
+    requests.post(url=url, auth=(username, password), files=data)
+```
+
+* **Notes:**
+  * The `referral_id` is the referral ID returned when creating or updating a referral approval in Step 4.
+  * The file size limit is 50 MB.
+
 ## [DO NOT USE] Option 2: CPR+ → Marketplace -> Supply Agency
 __We will not use this approach, we have decided to use Option 1__
 
@@ -373,3 +403,4 @@ In this option, CSI will send the Referral Approval from CPR+ via Marketplace to
   * The `supply_persona_id` will be provided in the referral request payload under `alayamarket_org_id`
   * The `outbox_id` should reference the entity ID in the originating system
   * The authorizations are expected to match the ACCloud format for authorizations and can be fetched from `$ACCLOUD_URL/api/v1/scheduler/authorizations/{authorization_id}`
+**
