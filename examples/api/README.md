@@ -279,7 +279,7 @@ A snapshot of the internal API specifications can be found [here](https://github
 
 ### Step 5: Send the Referral Documents
 
-Sending referral documents will first save the documents in the HQ branch under Client > Attachments > Marketplace Documents before sharing the file with the agency. 
+Sending referral documents will first save the documents in the HQ branch under Client > Attachments > Marketplace Documents before sharing the file with the agency. The agency will then automatically save the files in the agency btanch under Client > Attachments > Marketplace Documents once the referral is processed. 
 
 * **API reference:** External API specifications are not yet available for this endpoint. 
 A snapshot of the internal API specifications can be found [here](https://github.com/AlayaCare/alayamarket-optioncare-csi/blob/main/specs/referral_approval/internal.referral_approval.spec.yaml). 
