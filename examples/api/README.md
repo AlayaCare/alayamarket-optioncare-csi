@@ -18,7 +18,7 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
 
 ### Step 1: Create the Client
 
-* **API reference:** [client-api-external](https://app.swaggerhub.com/apis/AlayaCare/client-api-external/1.0.6#/Clients/post_clients) 
+* **API reference:** [client-api-external](https://app.swaggerhub.com/apis/AlayaCare/client-api-external#/Clients/post_clients) 
 
 * **URL:** `POST $ACCLOUD_URL/ext/api/v2/patients/clients`
 
@@ -53,14 +53,14 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
 * **Notes:**
   * The `external_id` is the external client ID, and optionally can be set to the ID of the client in CPR+
   * The `groups` must be set to include the ID of the group with name `CSI`
-    * Groups can be fetched from `$ACCLOUD_URL/ext/api/v2/patients/groups`, see to the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/client-api-external/1.0.6#/Groups/get_groups) 
+    * Groups can be fetched from `$ACCLOUD_URL/ext/api/v2/patients/groups`, see to the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/client-api-external#/Groups/get_groups) 
     * This will ensure HQ coordinators only see clients in their branch, and do not see clients in the agency branches
   * The response returned when creating a client will include the internal client ID
   * An existing client record can be retrieved or updated using the internal client ID or the external client ID, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/client-api-external/1.0.6#/Clients) 
 
 ### Step 2: Create the Service
 
-* **API reference:** [service-api-external](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Services/post_services) 
+* **API reference:** [service-api-external](https://app.swaggerhub.com/apis/AlayaCare/services-api-external#/Services/post_services) 
 
 * **URL:** `POST $ACCLOUD_URL/ext/api/v2/scheduler/services`
 
@@ -97,14 +97,14 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
   * The `client` can reference only one of `alayacare_client_id` or `client_id`
     * The `alayacare_client_id` is the external client ID provided in Step 1
     * The `client_id` is the internal client ID returned in Step 1  
-  * The payors/funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external/1.0.6#/Funders/get_funders)
-  * The service codes can be fetched from `$ACCLOUD_URL/ext/api/v2/scheduler/service_codes`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/services-api-external/1.0.1#/Service%20Codes/get_service_codes) 
+  * The payors/funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external#/Funders/get_funders)
+  * The service codes can be fetched from `$ACCLOUD_URL/ext/api/v2/scheduler/service_codes`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/services-api-external#/Service%20Codes/get_service_codes) 
   * The `start_date` and `projected_end_date` are optional. These are only informative and are not used when sending referral approvals to supplier agencies. 
 
 
 ### Step 3: Create the Authorization
 
-* **API reference:** [authorization-api-external](https://app.swaggerhub.com/apis/AlayaCare/authorizations-external_api/1.1.0) 
+* **API reference:** [authorization-api-external](https://app.swaggerhub.com/apis/AlayaCare/authorizations-external_api) 
 
 * **URL:** `POST $ACCLOUD_URL/ext/api/v2/scheduler/authorizations`
 
@@ -150,7 +150,7 @@ The options below are based on entities that exist on `https://csi.uat.alayacare
   * Payors/Funders can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`
   * The `client_id` is the internal client ID returned when creating a client in Step 1
   * The `service_ids` is the internal service ID returned when creating a service in Step 2 
-  * The `payor_id` is the internal payor/funder ID, and can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external/1.0.6#/Funders/get_funders)
+  * The `payor_id` is the internal payor/funder ID, and can be fetched from `$ACCLOUD_URL/ext/api/v2/accounting/funders`, see the API reference [here](https://app.swaggerhub.com/apis/AlayaCare/accounting-api-external#/Funders/get_funders)
   * The `notes` are not currently being displayed in the supply agency referral details. This will be supported soon. 
   * `authorization_number`, `member_number` and `program_id` are optional fields that can be used to identify the authorization. 
   * The `case_manager_*` fields are optional. This will be stored on the HQ branch only and will not be sent to the supply agency. 
