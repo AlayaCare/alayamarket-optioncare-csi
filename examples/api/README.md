@@ -404,3 +404,114 @@ In this option, CSI will send the Referral Approval from CPR+ via Marketplace to
   * The `outbox_id` should reference the entity ID in the originating system
   * The authorizations are expected to match the ACCloud format for authorizations and can be fetched from `$ACCLOUD_URL/api/v1/scheduler/authorizations/{authorization_id}`
 **
+
+---
+
+---
+
+## Referral Auto-Processing
+
+When onboarding a new supplier with a backlog of AlayaMarket referrals, rather than manually marking them as _Processed_ individually, an internal auto-processing endpoint is offered.
+
+**Notes:**
+
+- The auto-processor should be run at the beginning of the tenant lifecycle, before clients are introduced into the system in other ways in order to avoid the creation of duplicate clients.
+- Referrals are processed from oldest transmission date to newest.
+- Referrals are processed sequentially, which may be a slow process (5+ minutes) and should be treated as an asynchronous request.
+
+**URL:** `POST $ACCLOUD_URL/api/v2/intake/referrals/alayamarket/auto_process?branch_id={branch_id}`
+
+**Query parameters:**
+
+```YAML
+- name: 'branch_id'
+   type: integer
+   in: query
+   required: true
+   description: the branch ID to process referrals for.
+- name: 'override_client'
+   type: boolean
+   in: query
+   default: true
+   required: false
+   description: whether or not newer referrals with client data should overwrite existing client data from previous referrals.
+- name: 'override_service'
+   type: boolean
+   in: query
+   default: true
+   required: false
+   description: whether or not newer referrals service data should overwrite existing service data from previous referrals.
+- name: 'limit'
+   type: integer
+   in: query
+   required: false
+   description: the maximum number of referrals to try processing
+```
+
+**Example response:**
+
+```JSON
+{
+    "errors": [],
+    "success": [
+        {
+            "id": 5567,
+            "result": {
+                "client": {
+                    "external_id": null,
+                    "id": 1339
+                },
+                "referral": {
+                    "id": 5567,
+                    "message_id": "alayamarket-referral-id-3"
+                },
+                "service": {
+                    "external_id": "alayamarket-service-id-3",
+                    "id": 46
+                }
+            }
+        },
+        {
+            "id": 5568,
+            "result": {
+                "client": {
+                    "external_id": null,
+                    "id": 1338
+                },
+                "referral": {
+                    "id": 5568,
+                    "message_id": "alayamarket-referral-id-4"
+                },
+                "service": {
+                    "external_id": "alayamarket-service-id-4",
+                    "id": 45
+                }
+            }
+        }
+    ]
+}
+```
+
+**Getting branch information:**
+
+- **URL:** `$ACCLOUD_URL/api/v1/agency/branches`
+
+- **Example response:**
+
+```JSON
+{
+  "count": 10,
+  "items": [
+    {
+      "id": 1000, // <-- this ID can be used to run the auto-processor.
+      "is_hq": true,
+      "name": "alayamarket",
+      "parent_id": 1,
+      "status": "active",
+      "timezone": "America/Toronto"
+    }
+  ],
+  "page": 1,
+  "total": 1
+}
+```
